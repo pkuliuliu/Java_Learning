@@ -1,7 +1,7 @@
 /**
  *  * Created by liu on 17-5-11.
  *   */
-public class Main {
+public class IntegerEquivalence {
     public static void main(String[] args) {
         Integer n1 = new Integer(1);
         Integer n2 = new Integer(1);
