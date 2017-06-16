@@ -43,7 +43,7 @@
 |$|一行的结束|\G|前一个匹配的结束|
 |\b|词的边界|||
 ###代码
-```
+```java
 public class MatchRudolph {
     public static void main(String[] args) {
         /**
@@ -77,3 +77,58 @@ public class MatchRudolph {
 |X{n}|X{n}?|X{n}+|恰好n次X|
 |X{n,}|X{n,}?|X{n,}+|至少n次X|
 |X{n,m}|X{n,m}?|X{n,m}+|X至少n次，且不超过m次|
+
+### Pattern和Matcher
+```java
+public class TestRegularExpression {
+    public static void main(String[] args) {
+        if(args.length<2){
+            System.out.println("Usage:\njava TestRegularExpression characterSequence regularExpression");
+            System.exit(0);
+        }
+        System.out.println("Input: \""+args[0]+"\"");
+
+        for(String arg :args){
+            System.out.println("Regular expression:\""+arg+"\"");
+            Pattern p  = Pattern.compile(arg);//从arg表示的正则表达式中获得模式
+            Matcher matcher = p.matcher(args[0]);//获得模式对字符串args[0]的代理
+            while(matcher.find()){
+                System.out.println("Match \""+matcher.group()+"\" at positions "+ matcher.start()+","+(matcher.end()-1));
+            }
+        }
+        /**
+         * matched()--整个字符串是否匹配正则表达式
+         * lookingat()--字符串的始部分是否匹配正则表达式
+         * find()--依次简单匹配，每次匹配一个目标
+         * find(int start)--从start处开始匹配，每次匹配一个目标
+         */
+        Pattern pattern = Pattern.compile("abc");
+        Matcher matcher = pattern.matcher("abcdefabcabc");
+        System.out.println(matcher.matches());
+        matcher = pattern.matcher("abcdefabcabc");
+        System.out.println(matcher.lookingAt());
+        matcher = pattern.matcher("abcdefabcabc");
+        System.out.println(matcher.find());
+        matcher = pattern.matcher("abcdefabcabc");
+        System.out.println(matcher.find(0));
+    }
+}
+
+
+public class Finding {
+    public static void main(String[] args) {
+        Matcher matcher = Pattern.compile("\\w+").matcher("Evening is full of the linnet's wings");
+
+        while(matcher.find()){
+            System.out.print(matcher.group()+" ");
+        }
+
+        System.out.println();
+        int i=0;
+        while (matcher.find(i)){
+            System.out.println(matcher.group()+" ");
+            i++;
+        }
+    }
+}
+```
