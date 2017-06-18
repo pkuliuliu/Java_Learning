@@ -1,0 +1,26 @@
+0package com.liu.demo.streamdemo;
+1
+2import java.io.*;
+3
+4/**
+5 * Created by liu on 17-6-18.
+6 * 首先，创建一个与指定文件链接的FileWriter。然后，通过BufferedWriter将其包装起来用缓冲区输出
+7 * 然后再用用PrintWriter包装输出到新文件
+8 */
+9public class BasicFileOutput {
+10    static String file = "data/BasicFileOutput.out";
+11
+12    public static void main(String[] args) throws IOException{
+13        BufferedReader bufferedReader = new BufferedReader(new FileReader("src/com/liu/demo/streamdemo/BasicFileOutput.java"));
+14
+15        PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+16        String line;
+17        int i=0;
+18        while((line = bufferedReader.readLine())!=null){
+19            printWriter.write((i++) + line + "\n");
+20        }
+21        printWriter.flush();
+22        printWriter.close();
+23        bufferedReader.close();
+24    }
+25}

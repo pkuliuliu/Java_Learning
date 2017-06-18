@@ -1,4 +1,4 @@
-package com.liu.demo;
+package com.liu.demo.streamdemo;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

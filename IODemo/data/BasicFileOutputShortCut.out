@@ -1,0 +1,28 @@
+0 package com.liu.demo.streamdemo;
+1 
+2 import java.io.BufferedReader;
+3 import java.io.FileReader;
+4 import java.io.IOException;
+5 import java.io.PrintWriter;
+6 
+7 /**
+8  * Created by liu on 17-6-18.
+9  * 文本文件输出的快捷方式
+10  * java SE5 在PrintWriter中添加了一个辅助构造器，是得你不必在每次希望创建文本文件并向其中写入时，都去执行所有的装饰操作。
+11  */
+12 public class FileOutputShortCut {
+13     static String filename = "data/BasicFileOutputShortCut.out";
+14 
+15     public static void main(String[] args) throws IOException{
+16         BufferedReader bufferedReader = new BufferedReader(new FileReader("/home/liu/Workspace/Java/Java_Learning/IODemo/src/com/liu/demo/streamdemo/FileOutputShortCut.java"));
+17         PrintWriter printWriter = new PrintWriter(filename);
+18         int i=0;
+19         String line;
+20         while((line = bufferedReader.readLine())!=null){
+21             printWriter.write((i++)+" "+line+"\n");
+22         }
+23         printWriter.flush();
+24         printWriter.close();
+25         bufferedReader.close();
+26     }
+27 }
