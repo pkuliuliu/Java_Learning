@@ -7,6 +7,9 @@ import java.io.PipedOutputStream;
 
 /**
  * Created by liu on 17-6-14.
+ * 管道的价值只有在多线程中才能体现出来。因为管道流用于任务之间的通信
+ *
+ * 一个简单的生产者消费者模式demo
  */
 public class PipedStreamDemo {
 

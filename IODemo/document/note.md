@@ -196,3 +196,113 @@ public class StoringAndRecoveringData {
     }
 }
 ```
+
+####6. 读写随机访问文件
+```Java
+package com.liu.demo.streamdemo;
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Random;
+
+/**
+ * Created by liu on 17-6-18.
+ * RandomAccessFile实现了DataInput和DataOutput两种接口，支持读和写，"r",,"rw",,不支持“w”
+ * seek()函数可以到处移动，修改相应的值
+ */
+public class UsingRandomAccessFile {
+    static String file ="data/rtest.dat";
+    static void display() throws IOException{
+        RandomAccessFile rf = new RandomAccessFile(file,"r");
+        for(int i =0;i<7;i++){
+            System.out.println("Value "+i+": "+rf.readDouble());
+        }
+        System.out.println(rf.readUTF());
+        rf.close();
+    }
+
+    public static void main(String[] args) throws  IOException{
+        RandomAccessFile rf = new RandomAccessFile(file,"rw");
+        for(int i=0;i<7;i++){
+            rf.writeDouble(i*1.414);
+        }
+        rf.writeUTF("The end of the file");
+        rf.close();
+        display();
+        rf = new RandomAccessFile(file,"rw");
+        rf.seek(5*8);
+        rf.writeDouble(47.0001);//覆盖了第5个double，，覆盖了8个字节
+        rf.close();
+        display();
+    }
+}
+```
+####7.管道流
+```Java
+package com.liu.demo.streamdemo;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+
+/**
+ * Created by liu on 17-6-14.
+ * 管道的价值只有在多线程中才能体现出来。因为管道流用于任务之间的通信
+ *
+ * 一个简单的生产者消费者模式demo
+ */
+public class PipedStreamDemo {
+
+    public static void main(String[] args) throws Exception{
+        // create pos and pis object ,then connect them
+        PipedOutputStream pos = new PipedOutputStream();
+        PipedInputStream pis =  new PipedInputStream(pos);
+        // create action demo
+        InputStreamRunnable in = new InputStreamRunnable(pis);
+        OutStreamRunnable out = new OutStreamRunnable(pos);
+        // create two thread to run the demo
+        new Thread(in).start();
+        new Thread(out).start();
+    }
+    static class InputStreamRunnable implements Runnable{
+        private PipedInputStream pis;
+        public InputStreamRunnable(PipedInputStream pis){
+            System.out.println("i am inStream, prepared to get message");
+            this.pis = pis;
+        }
+
+        @Override
+        public void run() {
+            BufferedReader br = new BufferedReader(new InputStreamReader(pis));
+            try {
+                System.out.println(br.readLine());
+                //System.out.println(br.readLine());
+                br.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static class OutStreamRunnable implements Runnable{
+        private PipedOutputStream pos;
+        public OutStreamRunnable(PipedOutputStream pos){
+            this.pos = pos;
+            System.out.println("I am OutStream, prepared to print something");
+        }
+
+        @Override
+        public void run() {
+            try{
+                pos.write("hello world\n you cant get me".getBytes());
+                pos.flush();
+                pos.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+```
