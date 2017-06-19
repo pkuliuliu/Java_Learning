@@ -1,9 +1,6 @@
 package com.liu.demo.streamdemo;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by liu on 17-6-19.
@@ -19,5 +16,9 @@ public class BinaryFile {
 
     public static byte[] read(String bfileName) throws IOException{
         return read(new File(bfileName));
+    }
+
+    public static void main(String[] args) {
+
     }
 }

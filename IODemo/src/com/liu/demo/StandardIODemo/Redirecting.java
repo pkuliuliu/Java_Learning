@@ -1,9 +1,16 @@
 package com.liu.demo.StandardIODemo;
 
+import javax.print.DocFlavor;
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.util.regex.Pattern;
 
 /**
  * Created by liu on 17-6-19.
+ * 1.定义一个读文件的字节流对象BufferedInputStream
+ * 2.定义一个输出字节流
+ * 3.重定向标准输入和输出（分别只想定义的两个字节流）
+ * 4. 封装一个对System.in的输入流
  */
 public class Redirecting {
     public static void main(String[] args) throws IOException{

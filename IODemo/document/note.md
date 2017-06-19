@@ -1,11 +1,11 @@
 ##InputSteeam类型
-inputstream的作用是用来表示那些从不同数据源产生输入的类。这些数据员包括：
-1. 字节数组
-2. String对象
-3. 文件
-4. “管道”，工作方式与实际管道相似，即，从一端输入，另一端输出。
-5. 一个有其他种类的刘组成的序列，以便我们可以将他们收集合并到一个流内
-6. 其他数据源，如Internet等等
+        inputstream的作用是用来表示那些从不同数据源产生输入的类。这些数据员包括：
+        1. 字节数组
+        2. String对象
+        3. 文件
+        4. “管道”，工作方式与实际管道相似，即，从一端输入，另一端输出。
+        5. 一个有其他种类的刘组成的序列，以便我们可以将他们收集合并到一个流内
+        6. 其他数据源，如Internet等等
 
 |类|功能|构造器参数|如何使用|
 |:--:||||
@@ -306,3 +306,90 @@ public class PipedStreamDemo {
 }
 
 ```
+
+##标准I/O
+        按照标准IO模型，Java提供了System.in、System.out、System.err。其中System.out已经事先被包装成了PrintStrem对象。System.err同样也是PrintStream，但是System.in却是一个没有包装过的未经加工的InputStream。这意味着尽管我们也已立即使用System.out和system.err，但是在读取System.in之前必须对其进行包装。
+####1. 从标准输入中读取
+        通常我们会使用readLine()一次读取一行，为此，我们将System.in包装成BufferedReader来使用，这要求我们必须用InputStreamReader把System.in转换成Reader。
+```Java
+package com.liu.demo.StandardIODemo;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+/**
+ * Created by liu on 17-6-19.
+ * 直接显示你所输入的每一行
+ */
+public class Echo {
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String line;
+        while((line = br.readLine())!=null && line.length()>0){
+            System.out.println(line);
+        }
+    }
+}
+
+```
+####2. 将System.out转换成PrintWriter
+        System.out是一个PrintStream，而PrintStream是一个OutputStream。PrintWriter有一个可以接受OutputStream作为参数的构造器。因此，只要需要，就可以使用那个构造器把System.out转换成PrintWriter。
+```Java
+package com.liu.demo.StandardIODemo;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+/**
+ * Created by liu on 17-6-19.
+ */
+public class ChangeSystemOut {
+    public static void main(String[] args) throws IOException{
+        PrintWriter printWriter = new PrintWriter(System.out,true);//true--每次输出清理缓冲区
+        printWriter.println("hello world!!");
+    }
+}
+
+```
+####3. 标准I/O重定向
+        Java的System类提供了一些简单的静态方法，以允许我们对标准输入、输出和错误I/O流进行重定向：
+        setIn(InputStream)
+        setOut(PrintStream)
+        setErr(PrintStream)
+        如果我们突然开始在显示器上创建大量输出，而这些输出滚动得太快以至于无法阅读时。重定向输出就先得极为有用。对于我们想重复测试某个特定用户的输入序列的命令行程序来说，重定向输入就很有价值。下列简单演示了这些方法的使用：
+        注：IO重定向操纵的是字节流
+```Java
+package com.liu.demo.StandardIODemo;
+
+import java.io.*;
+
+/**
+ * Created by liu on 17-6-19.
+ * 1.定义一个读文件的字节流对象BufferedInputStream
+ * 2.定义一个输出字节流
+ * 3.重定向标准输入和输出（分别只想定义的两个字节流）
+ * 4. 封装一个对System.in的输入流
+ */
+public class Redirecting {
+    public static void main(String[] args) throws IOException{
+        PrintStream console = System.out;
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream("src/com/liu/demo/StandardIODemo/Redirecting.java"));
+        PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream("data/out.dat")));
+
+        System.setIn(in);
+        System.setOut(out);
+        System.setErr(out);
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));//封装System.in
+        String line;
+        while((line = br.readLine())!=null){
+            System.out.println(line);
+        }
+        in.close();
+        out.close();
+    }
+}
+```
+
+
