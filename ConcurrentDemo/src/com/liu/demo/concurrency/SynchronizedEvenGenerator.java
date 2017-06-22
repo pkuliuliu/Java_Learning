@@ -14,7 +14,6 @@ public class SynchronizedEvenGenerator extends IntGenerator {
     }
 
     public static void main(String[] args) {
-
         EvenChecker.test(new SynchronizedEvenGenerator());
     }
 }
